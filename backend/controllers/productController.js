@@ -161,7 +161,10 @@ export const fetchNewProducts = asyncHandler(async (req, res) => {
 })
 
 export const categoryProduct = asyncHandler(async (req, res) => {
-    const { brand, category, lowPrice, highPrice } = req.query;
+    const { brand, category, lowPrice, highPrice, keyword, page } = req.query;
+    console.log(req.query);
+    const limit = 6;
+    // const keyword = req.query.keyword ? { name: { $regex: req.query.keyword, $options: "i" } } : {};
     const filtered = []
     if (brand) {
         const newBrand = brand.split(",");
@@ -180,6 +183,11 @@ export const categoryProduct = asyncHandler(async (req, res) => {
     else if (highPrice) {
         filtered.push({ price: { $lt: highPrice } });
     }
+    if (keyword) {
+        filtered.push({ name: { $regex: keyword, $options: "i" } })
+    }
+
+    const skip = (page - 1) * limit;
 
     let finalString = {}
     if (filtered.length !== 0) {
@@ -187,6 +195,9 @@ export const categoryProduct = asyncHandler(async (req, res) => {
     }
 
     console.log(filtered);
-    const product = await Product.find(finalString);
-    res.json(product)
+    let numOfProduct = await Product.find(finalString);
+    numOfProduct = numOfProduct.length;
+    // console.log(numOfProduct.length);
+    const products = await Product.find(finalString).skip(skip).limit(limit);
+    res.json({ products, numOfProduct });
 })
