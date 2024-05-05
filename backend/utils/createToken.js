@@ -7,7 +7,7 @@ const createToken = (res, userId) => {
         secure: true,
         sameSite: "None",
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        // Domain: "netlify.app"
+        Domain: ".netlify.app"
     });
     console.log(token);
     return token;
