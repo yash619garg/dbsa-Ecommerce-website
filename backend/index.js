@@ -33,8 +33,10 @@ import orderRoute from "./routes/orderRoute.js"
 
 const app = express();
 
-// app.set("trust proxy", 1);
-app.use(cors());
+app.set("trust proxy", 1);
+app.use(cors({
+    credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
