@@ -71,14 +71,12 @@ export const logoutUser = asyncHandler(async (req, res) => {
 })
 
 export const allUsers = asyncHandler(async (req, res) => {
-    const users = await User.find({});
-    if (!users) {
-        res.status(500);
-        throw new Error("some database related problem");
-    }
-    else {
-        res.status(200).json({ users });
-    }
+    const page = req.query.page;
+    console.log(page);
+    const skip = (page - 1) * 10;
+    const numOfUsers = await User.countDocuments();
+    const users = await User.find({}).limit(10).skip(skip);
+    res.status(200).json({ users, numOfUsers });
 
 })
 
@@ -94,7 +92,7 @@ export const CurrentUserProfile = asyncHandler(async (req, res) => {
 })
 
 export const updateProfile = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const userId = req.user.id;
     const currentUser = await User.findById(userId);
     if (!currentUser) {
         res.status(404);
@@ -139,6 +137,7 @@ export const getUser = asyncHandler(async (req, res) => {
 
 export const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
+    console.log(req.body);
     if (!user) {
         res.status(404);
         throw new Error("user not found");
@@ -147,6 +146,7 @@ export const updateUser = asyncHandler(async (req, res) => {
         console.log(user);
         user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin;
         try {
             const updatedUser = await user.save();
             console.log(updatedUser);
