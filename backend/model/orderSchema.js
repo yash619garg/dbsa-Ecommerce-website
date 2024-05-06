@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+<<<<<<< HEAD
 
 const orderSchema = mongoose.Schema(
     {
@@ -87,3 +88,5 @@ const orderSchema = mongoose.Schema(
 
 const Order = mongoose.model("Order", orderSchema);
 export default Order;
+=======
+>>>>>>> 0ad7396... commit 6
