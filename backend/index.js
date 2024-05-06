@@ -34,7 +34,11 @@ import orderRoute from "./routes/orderRoute.js"
 const app = express();
 
 app.set("trust proxy", 1);
-app.use(cors());
+app.use(cors({
+    // origin : process.env.FRONTEND_URL,
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
